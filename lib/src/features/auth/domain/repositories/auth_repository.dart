@@ -59,4 +59,7 @@ abstract class AuthRepository {
   /// (trường hợp có trả object → sẽ đổi thành Domain Entity)
   /// ------------------------------------------------------------------------
   Future<void> registerTrial(TrialRegisterRequest request);
+  //  FORGOT PASSWORD
+  Future<void> forgotPassword(String phone);
+
 }

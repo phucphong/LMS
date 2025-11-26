@@ -5,22 +5,14 @@ import 'package:lms/src/features/auth/presentation/pages/register_trial_page.dar
 
 import '../../../../../core/app_language.dart';
 import '../../../../../core/widgets/custom_toast.dart';
+import '../../../../../core/widgets/custom_text_form_field.dart';
+import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/select_language.dart';
 
 import '../../../home/presentation/pages/hom_page.dart';
 import '../providers/login_notifier.dart';
+import 'forgot_password_page.dart';
 
-/// ===========================================================================
-///  MÀN HÌNH LOGIN CỦA ỨNG DỤNG LMS
-///  Người tạo: **Phongnp – 0964 931 224**
-///
-///  GIẢI THÍCH CHUNG:
-///  - Dùng **Riverpod** để quản lý state đăng nhập
-///  - Dùng **ScreenUtil** để responsive theo kích thước màn hình
-///  - Dùng **AppStrings** + **AppLanguage** để hỗ trợ đa ngôn ngữ
-///  - Login thành công → điều hướng sang HomePage
-///  - Hiển thị Toast khi login lỗi/thành công
-/// ===========================================================================
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -29,17 +21,12 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  /// KEY form kiểm tra hợp lệ username/password
   final _formKey = GlobalKey<FormState>();
 
-  /// Controller quản lý text nhập của người dùng
   final _userController = TextEditingController();
   final _passController = TextEditingController();
 
-  /// Trạng thái Checkbox "Lưu mật khẩu"
   bool _rememberMe = false;
-
-  /// Trạng thái ẩn/hiện mật khẩu
   bool _obscurePassword = true;
 
   @override
@@ -51,25 +38,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    /// Lấy toàn bộ state login (isLoading, success, error)
     final state = ref.watch(loginNotifierProvider);
 
-    /// Lấy ngôn ngữ hiện tại
     final appLang = ref.watch(appLanguageProvider);
     final strings = AppStrings(appLang);
 
-    /// Theme hiện tại của ứng dụng (màu sắc + kiểu chữ)
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
 
-    // ================================================================
-    // LẮNG NGHE SỰ KIỆN LOGIN:
-    // - Thành công: show success toast + chuyển trang Home
-    // - Thất bại: show error toast
-    // ================================================================
+    // Lắng nghe state login để show toast + điều hướng
     ref.listen(loginNotifierProvider, (previous, next) {
-      // Nếu login OK → điều hướng sang HomePage
       if (next.success && !next.isLoading) {
         showSuccessToast(
           context,
@@ -78,7 +57,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         );
 
         Future.microtask(() {
-          /// pushReplacement → thay thế luôn Login (không cho back lại)
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const HomePage()),
@@ -86,7 +64,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         });
       }
 
-      // Nếu có lỗi login → hiển thị Toast lỗi
       if (next.error != null && next.error!.isNotEmpty) {
         showErrorToast(
           context,
@@ -97,299 +74,265 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     return Scaffold(
+      // Cho phép layout tự đẩy lên khi bàn phím mở
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
-          /// Padding toàn màn hình
-          padding: EdgeInsets.symmetric(
-            horizontal: 24.w,
-            vertical: 12.h,
-          ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
-          /// ===========================
-          /// Layout chính chia 2 phần:
-          ///   1. Khu vực Form Login (phía trên)
-          ///   2. Khu vực Copyright (phía dưới)
-          /// ===========================
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // ==============================
-              // PHẦN TRÊN: Logo + Form
-              // ==============================
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  40.h.verticalSpace,
+            return SingleChildScrollView(
+              // Khi bàn phím mở, thêm padding bottom = chiều cao bàn phím
+              padding: EdgeInsets.only(
+                left: 24.w,
+                right: 24.w,
+                top: 12.h,
+                bottom: (bottomInset > 0 ? bottomInset : 12.h),
+              ),
+              child: ConstrainedBox(
+                // Đảm bảo tối thiểu = chiều cao màn hình (trừ padding),
+                // để bình thường vẫn kê được copyright ở đáy
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight -
+                      MediaQuery.of(context).padding.top,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // =============== PHẦN TRÊN: LOGO + FORM ===============
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          40.h.verticalSpace,
 
-                  /// Widget chọn ngôn ngữ, nằm góc phải
-                  const Align(
-                    alignment: Alignment.topRight,
-                    child: SelectLanguage(),
-                  ),
-
-                  32.h.verticalSpace,
-
-                  /// Logo của ứng dụng
-                  Image.asset(
-                    'assets/images/ic_logo.webp',
-                    height: 96.h,
-                    fit: BoxFit.contain,
-                  ),
-
-                  24.h.verticalSpace,
-
-                  /// Dòng chữ "Đăng nhập hệ thống"
-                  Text(
-                    strings.loginTitle,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontSize: 18.sp,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  20.h.verticalSpace,
-
-                  /// =====================================================
-                  ///                       FORM LOGIN
-                  /// =====================================================
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        /// --------------------- Ô TÀI KHOẢN ---------------------
-                        /// TextFormField có controller + validation
-                        TextFormField(
-                          controller: _userController,
-                          style: TextStyle(fontSize: 14.sp),
-                          decoration: InputDecoration(
-                            labelText: strings.usernameLabel,  // "Tài khoản"
-                            labelStyle: TextStyle(fontSize: 13.sp),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 8.h,
-                            ),
-                          ),
-                          // Kiểm tra ô nhập có rỗng không
-                          validator: (v) =>
-                          (v == null || v.isEmpty)
-                              ? strings.usernameRequired
-                              : null,
-                        ),
-
-                        20.h.verticalSpace,
-
-                        /// --------------------- Ô MẬT KHẨU ---------------------
-                        TextFormField(
-                          controller: _passController,
-                          obscureText: _obscurePassword, // ẩn/hiện mật khẩu
-                          style: TextStyle(fontSize: 14.sp),
-                          decoration: InputDecoration(
-                            labelText: strings.passwordLabel, // "Mật khẩu"
-                            labelStyle: TextStyle(fontSize: 13.sp),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 8.h,
-                            ),
-
-                            /// Icon con mắt để bật/tắt xem mật khẩu
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                size: 20.sp,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
+                          const Align(
+                            alignment: Alignment.topRight,
+                            child: SelectLanguage(),
                           ),
 
-                          /// Kiểm tra xem mật khẩu có rỗng không
-                          validator: (v) =>
-                          (v == null || v.isEmpty)
-                              ? strings.passwordRequired
-                              : null,
-                        ),
+                          32.h.verticalSpace,
 
-                        8.h.verticalSpace,
-
-                        /// --------------------- LƯU MẬT KHẨU + QUÊN MẬT KHẨU ---------------------
-                        Row(
-                          children: [
-                            /// Checkbox: Lưu mật khẩu
-                            SizedBox(
-                              width: 20.w,
-                              height: 20.w,
-                              child: Checkbox(
-                                value: _rememberMe,
-                                onChanged: (v) {
-                                  setState(() {
-                                    _rememberMe = v ?? false;
-                                  });
-                                },
-                                visualDensity: VisualDensity.compact,
-                                materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                              ),
-                            ),
-                            4.w.horizontalSpace,
-                            Text(
-                              strings.rememberMe, // "Lưu mật khẩu"
-                              style: textTheme.bodySmall?.copyWith(
-                                fontSize: 13.sp,
-                              ),
-                            ),
-
-                            const Spacer(),
-
-                            /// Nút "Quên mật khẩu?"
-                            TextButton(
-                              onPressed: () {
-                                // TODO: Điều hướng quên mật khẩu (sẽ thêm sau)
-                              },
-                              child: Text(
-                                strings.forgotPassword,
-                                style: textTheme.bodySmall?.copyWith(
-                                  fontSize: 13.sp,
-                                  color: colorScheme.primary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        12.h.verticalSpace,
-
-                        /// --------------------- NÚT ĐĂNG NHẬP ---------------------
-                        SizedBox(
-                          width: double.infinity,
-                          height: 44.h,
-                          child: ElevatedButton(
-                            onPressed: state.isLoading
-                                ? null // đang loading → disable button
-                                : () {
-                              /// Kiểm tra form trước khi login
-                              if (_formKey.currentState?.validate() ??
-                                  false) {
-                                ref
-                                    .read(
-                                  loginNotifierProvider.notifier,
-                                )
-                                    .login(
-                                  _userController.text.trim(),
-                                  _passController.text,
-                                );
-                              }
-                            },
-
-                            /// UI nút: bo góc, tự động disable khi loading
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-
-                            /// Loading spinner khi đang login
-                            child: state.isLoading
-                                ? SizedBox(
-                              width: 18.w,
-                              height: 18.w,
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            )
-                                : Text(
-                              strings.loginButton, // "Đăng nhập"
-                              style: textTheme.labelLarge?.copyWith(
-                                fontSize: 15.sp,
-                              ),
-                            ),
+                          Image.asset(
+                            'assets/images/ic_logo.webp',
+                            height: 96.h,
+                            fit: BoxFit.contain,
                           ),
-                        ),
 
-                        12.h.verticalSpace,
+                          24.h.verticalSpace,
 
-                        /// --------------------- ĐĂNG KÝ NGAY ---------------------
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              strings.noAccount, // "Bạn chưa có tài khoản?"
-                              style: textTheme.bodyMedium?.copyWith(
-                                fontSize: 14.sp,
-                                color: (textTheme.bodyMedium?.color ??
-                                    colorScheme.onBackground)
-                                    .withOpacity(0.7),
-                              ),
+                          Text(
+                            strings.loginTitle,
+                            style: textTheme.titleMedium?.copyWith(
+                              fontSize: 18.sp,
                             ),
+                            textAlign: TextAlign.center,
+                          ),
 
-                            /// Nút "Đăng ký ngay"
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const RegisterTrialPage(),
+                          20.h.verticalSpace,
+
+                          /// ================= FORM LOGIN =================
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                /// ---------- Ô TÀI KHOẢN ----------
+                                CustomTextFormField(
+                                  label: strings.usernameLabel,
+                                  hintText: strings.usernameLabel,
+                                  controller: _userController,
+                                  keyboardType: TextInputType.text,
+                                  prefixIcon: Icon(
+                                    Icons.credit_card,
+                                    size: 20.sp,
                                   ),
-                                );
-                              },
-                              child: Text(
-                                strings.registerNow,
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.primary,
+                                  enableClearButton: true,
+                                  validator: (v) =>
+                                  (v == null || v.isEmpty)
+                                      ? strings.usernameRequired
+                                      : null,
+
                                 ),
+
+                                20.h.verticalSpace,
+
+                                /// --------------------- Ô MẬT KHẨU ---------------------
+                                CustomTextFormField(
+                                  label: strings.passwordLabel,
+                                  hintText: strings.passwordLabel,
+                                  controller: _passController,
+                                  keyboardType:
+                                  TextInputType.visiblePassword,
+                                  obscureText: _obscurePassword,
+                                  prefixIcon: Icon(
+                                    Icons.lock_outline,
+                                    size: 20.sp,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscurePassword
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      size: 20.sp,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscurePassword =
+                                        !_obscurePassword;
+                                      });
+                                    },
+                                  ),
+                                  validator: (v) =>
+                                  (v == null || v.isEmpty)
+                                      ? strings.passwordRequired
+                                      : null,
+                                ),
+
+                                8.h.verticalSpace,
+
+                                /// -------- LƯU MẬT KHẨU + QUÊN MẬT KHẨU --------
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 20.w,
+                                      height: 20.w,
+                                      child: Checkbox(
+                                        value: _rememberMe,
+                                        onChanged: (v) {
+                                          setState(() {
+                                            _rememberMe = v ?? false;
+                                          });
+                                        },
+                                        visualDensity:
+                                        VisualDensity.compact,
+                                        materialTapTargetSize:
+                                        MaterialTapTargetSize
+                                            .shrinkWrap,
+                                      ),
+                                    ),
+                                    4.w.horizontalSpace,
+                                    Text(
+                                      strings.rememberMe,
+                                      style:
+                                      textTheme.bodySmall?.copyWith(
+                                        fontSize: 13.sp,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                            const ForgotPasswordPage(),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        strings.forgotPassword,
+                                        style: textTheme.bodySmall
+                                            ?.copyWith(
+                                          fontSize: 13.sp,
+                                          color: colorScheme.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                12.h.verticalSpace,
+
+                                /// --------------------- NÚT ĐĂNG NHẬP ---------------------
+                              CustomButton(
+                                text: strings.loginButton,
+                                isLoading: state.isLoading,
+                                enabled: !state.isLoading,
+                                onPressed: () {
+                                  if (_formKey.currentState?.validate() ?? false) {
+                                    ref.read(loginNotifierProvider.notifier).login(
+                                      _userController.text.trim(),
+                                      _passController.text,
+                                    );
+                                  }
+                                },
                               ),
+
+
+                                12.h.verticalSpace,
+
+                                /// --------------------- ĐĂNG KÝ NGAY ---------------------
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      strings.noAccount,
+                                      style: textTheme.bodyMedium
+                                          ?.copyWith(
+                                        fontSize: 14.sp,
+                                        color: (textTheme.bodyMedium
+                                            ?.color ??
+                                            colorScheme
+                                                .onBackground)
+                                            .withOpacity(0.7),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                            const RegisterTrialPage(),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        strings.registerNow,
+                                        style: textTheme.bodyMedium
+                                            ?.copyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: colorScheme.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+
+                      // =============== PHẦN DƯỚI: COPYRIGHT ===============
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          16.h.verticalSpace,
+                          Text(
+                            strings.copyright('PHONGNP'),
+                            textAlign: TextAlign.center,
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.primary,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                          4.h.verticalSpace,
+                          Text(
+                            '${strings.versionLabel('0964 931 225')} ',
+                            textAlign: TextAlign.center,
+                            style: textTheme.bodySmall?.copyWith(
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-
-              // =======================================================
-              // PHẦN DƯỚI: COPYRIGHT + VERSION + NGƯỜI TẠO
-              // =======================================================
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  16.h.verticalSpace,
-
-                  /// Tên công ty / tác giả phần mềm
-                  Text(
-                    strings.copyright('PHONGNP'),
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.primary,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-
-                  4.h.verticalSpace,
-
-                  /// Phiên bản ứng dụng + người tạo
-                  Text(
-                    '${strings.versionLabel('0964 931 225')} ',
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodySmall?.copyWith(
-                      fontSize: 13.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

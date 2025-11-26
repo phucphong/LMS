@@ -23,4 +23,9 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> registerTrial(TrialRegisterRequest request) async {
     await remoteDataSource.registerTrial(request);
   }
+
+  @override
+  Future<void> forgotPassword(String phone) async {
+    await remoteDataSource.forgotPassword(phone);
+  }
 }

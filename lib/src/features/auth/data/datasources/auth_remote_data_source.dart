@@ -30,6 +30,8 @@ abstract class AuthRemoteDataSource {
   /// API Đăng ký học thử
   /// Server trả về List<dynamic> (theo API hiện tại)
   Future<List<dynamic>> registerTrial(TrialRegisterRequest request);
+
+  Future<void> forgotPassword(String phone);
 }
 
 /// ===========================================================================
@@ -101,4 +103,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw Exception(e.toString());
     }
   }
+
+  @override
+  Future<void> forgotPassword(String phone) async {
+    // TODO: sửa URL + body theo API thật
+    // ví dụ:
+    await  _client.dio.post(
+      '/ex/apikh/capnhattaikhoan',
+      data: {'phone': phone},
+    );
+  }
+
+
 }

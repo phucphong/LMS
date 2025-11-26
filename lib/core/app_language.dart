@@ -296,6 +296,65 @@ class AppStrings {
     AppLanguage.ko => 'Đăng ký',
   };
 
+  // ==== Forgot password ====
+  String get forgotPasswordTitle => switch (lang) {
+    AppLanguage.vi => 'Quên mật khẩu',
+    AppLanguage.en => 'Forgot password',
+    AppLanguage.zh => '忘记密码',
+    AppLanguage.ja => 'パスワードをお忘れですか',
+    AppLanguage.ko => '비밀번호 찾기',
+  };
+
+  String get forgotPasswordHintText => switch (lang) {
+    AppLanguage.vi => 'Số điện thoại',
+    AppLanguage.en => 'Phone number',
+    AppLanguage.zh => '手机号',
+    AppLanguage.ja => '電話番号',
+    AppLanguage.ko => '전화번호',
+  };
+
+  String get forgotPasswordDescription => switch (lang) {
+    AppLanguage.vi =>
+    'Hãy nhập số điện thoại bạn đã đăng ký tài khoản, chúng tôi sẽ gửi mã xác nhận qua tin nhắn SMS.',
+    AppLanguage.en =>
+    'Enter the phone number you registered. We will send a verification code via SMS.',
+    AppLanguage.zh =>
+    '请输入您注册账号时使用的手机号，我们会通过短信发送验证码。',
+    AppLanguage.ja =>
+    '登録した電話番号を入力してください。SMSで確認コードを送信します。',
+    AppLanguage.ko =>
+    '가입할 때 사용한 전화번호를 입력해주세요. SMS로 인증 코드를 보내드립니다.',
+  };
+
+  String get forgotPasswordSendCode => switch (lang) {
+    AppLanguage.vi => 'Gửi mã xác nhận',
+    AppLanguage.en => 'Send verification code',
+    AppLanguage.zh => '发送验证码',
+    AppLanguage.ja => '確認コードを送信',
+    AppLanguage.ko => '인증 코드 보내기',
+  };
+
+  String hotlineHelpText(String phone) => switch (lang) {
+    AppLanguage.vi =>
+    'Nếu bạn gặp khó khăn khi lấy lại mật khẩu, vui lòng liên hệ hotline $phone để được hỗ trợ',
+    AppLanguage.en =>
+    'If you have trouble resetting your password, please contact our hotline $phone for support.',
+    AppLanguage.zh =>
+    '如果您在找回密码时遇到困难，请拨打热线 $phone 获得帮助。',
+    AppLanguage.ja =>
+    'パスワード再設定でお困りの際は、ホットライン $phone までお問い合わせください。',
+    AppLanguage.ko =>
+    '비밀번호 재설정에 문제가 있는 경우, 핫라인 $phone 으로 문의해주세요.',
+  };
+
+  String get forgotPasswordSuccess => switch (lang) {
+    AppLanguage.vi => 'Đã gửi mã xác nhận, vui lòng kiểm tra SMS.',
+    AppLanguage.en => 'Verification code sent. Please check your SMS.',
+    AppLanguage.zh => '验证码已发送，请查收短信。',
+    AppLanguage.ja => '確認コードを送信しました。SMSをご確認ください。',
+    AppLanguage.ko => '인증 코드가 전송되었습니다. 문자 메시지를 확인하세요.',
+  };
+
   String get registerTrialDescription => switch (lang) {
     AppLanguage.vi =>
     'Nếu bạn đã kích hoạt tài khoản hoặc có tài khoản miễn phí do trường cung cấp, vui lòng',
