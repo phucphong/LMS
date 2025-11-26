@@ -1,6 +1,6 @@
 # lms
 
-LMS NGOAI THUONG
+LMS QUẢN LÝ SINH VIÊN
 
 ## Getting Started
 
