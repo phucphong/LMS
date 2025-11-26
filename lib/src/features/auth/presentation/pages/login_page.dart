@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lms/src/features/auth/presentation/pages/register_trial_page.dart';
 
 import '../../../../../core/app_language.dart';
 import '../../../../../core/widgets/custom_toast.dart';
@@ -36,6 +37,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final state = ref.watch(loginNotifierProvider);
     final appLang = ref.watch(appLanguageProvider);
     final strings = AppStrings(appLang);
+
+    // thêm theme để dùng đa theme
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
     // Lắng nghe login để show toast + điều hướng Home
     ref.listen(loginNotifierProvider, (previous, next) {
@@ -108,10 +114,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         // Tiêu đề
                         Text(
                           strings.loginTitle,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(fontSize: 18.sp),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontSize: 18.sp,
+                          ),
                           textAlign: TextAlign.center,
                         ),
 
@@ -201,8 +206,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   4.w.horizontalSpace,
                                   Text(
                                     strings.rememberMe,
-                                    style: TextStyle(fontSize: 13.sp),
+                                    style: textTheme.bodySmall?.copyWith(
+                                      fontSize: 13.sp,
+                                      // không set color cứng, để theo theme
+                                    ),
                                   ),
+
                                   const Spacer(),
                                   TextButton(
                                     onPressed: () {
@@ -210,7 +219,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     },
                                     child: Text(
                                       strings.forgotPassword,
-                                      style: TextStyle(fontSize: 13.sp),
+                                      style: textTheme.bodySmall?.copyWith(
+                                        fontSize: 13.sp,
+                                        color: colorScheme.primary,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -230,8 +242,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         ?.validate() ??
                                         false) {
                                       ref
-                                          .read(loginNotifierProvider
-                                          .notifier)
+                                          .read(
+                                        loginNotifierProvider
+                                            .notifier,
+                                      )
                                           .login(
                                         _userController.text.trim(),
                                         _passController.text,
@@ -240,7 +254,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.r),
+                                      borderRadius:
+                                      BorderRadius.circular(12.r),
                                     ),
                                   ),
                                   child: state.isLoading
@@ -254,7 +269,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   )
                                       : Text(
                                     strings.loginButton,
-                                    style: TextStyle(fontSize: 15.sp),
+                                    style: textTheme.labelLarge
+                                        ?.copyWith(fontSize: 15.sp),
                                   ),
                                 ),
                               ),
@@ -269,27 +285,37 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   children: [
                                     Text(
                                       strings.noAccount,
-                                      style: TextStyle(
+                                      style: textTheme.bodyMedium?.copyWith(
                                         fontSize: 14.sp,
-                                        color: Colors.grey.shade600,
+                                        // fallback: nếu bodyMedium.color null thì dùng onBackground
+                                        color: (textTheme.bodyMedium?.color ?? colorScheme.onBackground)
+                                            .withOpacity(0.7),
                                       ),
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        // TODO: navigate register
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => const RegisterTrialPage(),
+                                          ),
+                                        );
                                       },
                                       child: Text(
                                         strings.registerNow,
-                                        style: TextStyle(
-                                          color: Colors.teal,
+                                        style: textTheme.bodyMedium?.copyWith(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
+                                          // nếu sợ primary trùng nền thì dùng onPrimary / secondary tuỳ theme
+                                          color: colorScheme.primary,
+                                          // hoặc tạm dùng:
+                                          // color: Colors.teal,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
+
                             ],
                           ),
                         ),
@@ -304,8 +330,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         Text(
                           strings.copyright('PHONGNP'),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.teal,
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.primary,
                             fontSize: 14.sp,
                           ),
                         ),
@@ -313,7 +339,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         Text(
                           strings.versionLabel('1'),
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 13.sp),
+                          style: textTheme.bodySmall?.copyWith(
+                            fontSize: 13.sp,
+                          ),
                         ),
                       ],
                     ),

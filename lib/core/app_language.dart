@@ -170,4 +170,145 @@ class AppStrings {
     AppLanguage.ja => '🇯🇵',
     AppLanguage.ko => '🇰🇷',
   };
+
+
+
+  // ==== Register Trial ====
+  String get registerTrialTitle => switch (lang) {
+    AppLanguage.vi => 'Đăng ký học thử miễn phí',
+    AppLanguage.en => 'Free trial registration',
+    AppLanguage.zh => '免费试听注册',
+    AppLanguage.ja => '無料体験の登録',
+    AppLanguage.ko => '무료 체험 신청',
+  };
+
+  String get whoAreYou => switch (lang) {
+    AppLanguage.vi => 'Bạn là phụ huynh hay học sinh?',
+    AppLanguage.en => 'Are you a parent or a student?',
+    AppLanguage.zh => '您是家长还是学生？',
+    AppLanguage.ja => '保護者ですか？生徒ですか？',
+    AppLanguage.ko => '학부모이신가요, 학생이신가요?',
+  };
+
+  String get parentOption => switch (lang) {
+    AppLanguage.vi => 'Phụ huynh',
+    AppLanguage.en => 'Parent',
+    AppLanguage.zh => '家长',
+    AppLanguage.ja => '保護者',
+    AppLanguage.ko => '학부모',
+  };
+
+  String get studentOption => switch (lang) {
+    AppLanguage.vi => 'Học sinh',
+    AppLanguage.en => 'Student',
+    AppLanguage.zh => '学生',
+    AppLanguage.ja => '生徒',
+    AppLanguage.ko => '학생',
+  };
+
+  String get fullNameLabel => switch (lang) {
+    AppLanguage.vi => 'Họ và tên',
+    AppLanguage.en => 'Full name',
+    AppLanguage.zh => '姓名',
+    AppLanguage.ja => '氏名',
+    AppLanguage.ko => '이름',
+  };
+
+  String get fullNameHint => switch (lang) {
+    AppLanguage.vi => 'Họ và tên',
+    AppLanguage.en => 'Your full name',
+    AppLanguage.zh => '请输入姓名',
+    AppLanguage.ja => '氏名を入力してください',
+    AppLanguage.ko => '이름을 입력하세요',
+  };
+
+  String get phoneLabel => switch (lang) {
+    AppLanguage.vi => 'Số điện thoại',
+    AppLanguage.en => 'Phone number',
+    AppLanguage.zh => '手机号',
+    AppLanguage.ja => '電話番号',
+    AppLanguage.ko => '전화번호',
+  };
+
+  String get phoneHint => switch (lang) {
+    AppLanguage.vi => 'Số điện thoại',
+    AppLanguage.en => 'Phone number',
+    AppLanguage.zh => '请输入手机号',
+    AppLanguage.ja => '電話番号を入力してください',
+    AppLanguage.ko => '전화번호를 입력하세요',
+  };
+
+  String get gradeLabel => switch (lang) {
+    AppLanguage.vi => 'Khối lớp',
+    AppLanguage.en => 'Grade',
+    AppLanguage.zh => '年级',
+    AppLanguage.ja => '学年',
+    AppLanguage.ko => '학년',
+  };
+
+  String get gradeHint => switch (lang) {
+    AppLanguage.vi => 'Chọn khối lớp',
+    AppLanguage.en => 'Select grade',
+    AppLanguage.zh => '选择年级',
+    AppLanguage.ja => '学年を選択',
+    AppLanguage.ko => '학년 선택',
+  };
+
+  String get startLearningButton => switch (lang) {
+    AppLanguage.vi => 'Vào học',
+    AppLanguage.en => 'Start learning',
+    AppLanguage.zh => '开始学习',
+    AppLanguage.ja => '学習を始める',
+    AppLanguage.ko => '수업 시작하기',
+  };
+
+  String get registerTrialDescription => switch (lang) {
+    AppLanguage.vi =>
+    'Nếu bạn đã kích hoạt tài khoản hoặc có tài khoản miễn phí do trường cung cấp, vui lòng',
+    AppLanguage.en =>
+    'If you already have an activated account or a free account provided by your school, please',
+    AppLanguage.zh => '如果您已经激活账号或拥有学校提供的免费账号，请',
+    AppLanguage.ja => 'すでに有効なアカウント、または学校から提供された無料アカウントをお持ちの場合は、',
+    AppLanguage.ko => '이미 활성화된 계정이나 학교에서 제공한 무료 계정이 있다면,',
+  };
+
+  String get loginHere => switch (lang) {
+    AppLanguage.vi => 'Đăng nhập tại đây',
+    AppLanguage.en => 'log in here',
+    AppLanguage.zh => '在此登录',
+    AppLanguage.ja => 'こちらからログイン',
+    AppLanguage.ko => '여기에서 로그인',
+  };
+
+  String get registerTrialSuccess => switch (lang) {
+    AppLanguage.vi => 'Đăng ký học thử thành công',
+    AppLanguage.en => 'Trial registration successful',
+    AppLanguage.zh => '试听注册成功',
+    AppLanguage.ja => '体験登録が完了しました',
+    AppLanguage.ko => '무료 체험 신청이 완료되었습니다',
+  };
+
+  String get fullNameRequired => switch (lang) {
+    AppLanguage.vi => 'Vui lòng nhập họ và tên',
+    AppLanguage.en => 'Please enter full name',
+    AppLanguage.zh => '请输入姓名',
+    AppLanguage.ja => '氏名を入力してください',
+    AppLanguage.ko => '이름을 입력해 주세요',
+  };
+
+  String get phoneRequired => switch (lang) {
+    AppLanguage.vi => 'Vui lòng nhập số điện thoại',
+    AppLanguage.en => 'Please enter phone number',
+    AppLanguage.zh => '请输入手机号',
+    AppLanguage.ja => '電話番号を入力してください',
+    AppLanguage.ko => '전화번호를 입력해 주세요',
+  };
+
+  String get gradeRequired => switch (lang) {
+    AppLanguage.vi => 'Vui lòng chọn khối lớp',
+    AppLanguage.en => 'Please select grade',
+    AppLanguage.zh => '请选择年级',
+    AppLanguage.ja => '学年を選択してください',
+    AppLanguage.ko => '학년을 선택해 주세요',
+  };
 }

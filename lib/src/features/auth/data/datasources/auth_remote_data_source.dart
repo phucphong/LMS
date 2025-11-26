@@ -2,11 +2,14 @@
 import 'package:dio/dio.dart';
 
 import '../../../../../core/network/api_client.dart';
+import '../../domain/entities/trial_register_request.dart';
 import '../models/login_request.dart';
 import '../models/login_result_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<LoginResultModel> login(LoginRequest request);
+
+  Future<List<dynamic>> registerTrial(TrialRegisterRequest request);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -33,4 +36,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw Exception(msg);
     }
   }
+
+  @override
+  Future<List<dynamic>> registerTrial(TrialRegisterRequest request) async {
+    try {
+      final response = await _client.dio.post(
+        '/ex/api/addorEditAccountOff',
+        data: request.toJson(),
+      );
+
+      return (response.data as List?) ?? [];
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 }
