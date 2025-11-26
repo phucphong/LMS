@@ -175,11 +175,11 @@ class AppStrings {
 
   // ==== Register Trial ====
   String get registerTrialTitle => switch (lang) {
-    AppLanguage.vi => 'Đăng ký học thử miễn phí',
-    AppLanguage.en => 'Free trial registration',
-    AppLanguage.zh => '免费试听注册',
-    AppLanguage.ja => '無料体験の登録',
-    AppLanguage.ko => '무료 체험 신청',
+    AppLanguage.vi => 'Đăng ký tài khoản',
+    AppLanguage.en => 'Register account',
+    AppLanguage.zh => 'Đăng ký tài khoản',
+    AppLanguage.ja => 'Đăng ký tài khoản',
+    AppLanguage.ko => 'Đăng ký tài khoản',
   };
 
   String get whoAreYou => switch (lang) {
@@ -230,12 +230,46 @@ class AppStrings {
     AppLanguage.ko => '전화번호',
   };
 
+
   String get phoneHint => switch (lang) {
     AppLanguage.vi => 'Số điện thoại',
     AppLanguage.en => 'Phone number',
     AppLanguage.zh => '请输入手机号',
     AppLanguage.ja => '電話番号を入力してください',
     AppLanguage.ko => '전화번호를 입력하세요',
+  };
+
+
+
+  String get emailLabel => switch (lang) {
+    AppLanguage.vi => 'Email',
+    AppLanguage.en => 'Email',
+    AppLanguage.zh => 'Email',
+    AppLanguage.ja => 'Email',
+    AppLanguage.ko => 'Email',
+  };
+  String get emailHint => switch (lang) {
+    AppLanguage.vi => 'Email',
+    AppLanguage.en => 'Email',
+    AppLanguage.zh => 'Email',
+    AppLanguage.ja => 'Email',
+    AppLanguage.ko => 'Email',
+  };
+
+
+  String get accountLabel => switch (lang) {
+    AppLanguage.vi => 'Tài khoản',
+    AppLanguage.en => 'Account',
+    AppLanguage.zh => 'Tài khoản',
+    AppLanguage.ja => 'Tài khoản',
+    AppLanguage.ko => 'Tài khoản',
+  };
+  String get accountHint => switch (lang) {
+    AppLanguage.vi => 'Tài khoản',
+    AppLanguage.en => 'Account',
+    AppLanguage.zh => 'Tài khoản',
+    AppLanguage.ja => 'Tài khoản',
+    AppLanguage.ko => 'Tài khoản',
   };
 
   String get gradeLabel => switch (lang) {
@@ -254,12 +288,12 @@ class AppStrings {
     AppLanguage.ko => '학년 선택',
   };
 
-  String get startLearningButton => switch (lang) {
-    AppLanguage.vi => 'Vào học',
-    AppLanguage.en => 'Start learning',
-    AppLanguage.zh => '开始学习',
-    AppLanguage.ja => '学習を始める',
-    AppLanguage.ko => '수업 시작하기',
+  String get registerButton => switch (lang) {
+    AppLanguage.vi => 'Đăng ký',
+    AppLanguage.en => 'Register',
+    AppLanguage.zh => 'Đăng ký',
+    AppLanguage.ja => 'Đăng ký',
+    AppLanguage.ko => 'Đăng ký',
   };
 
   String get registerTrialDescription => switch (lang) {
@@ -303,6 +337,21 @@ class AppStrings {
     AppLanguage.ja => '電話番号を入力してください',
     AppLanguage.ko => '전화번호를 입력해 주세요',
   };
+  String get emailRequired => switch (lang) {
+    AppLanguage.vi => 'Vui lòng nhập email',
+    AppLanguage.en => 'Please enter email',
+    AppLanguage.zh => 'Vui lòng nhập email',
+    AppLanguage.ja => 'Vui lòng nhập email',
+    AppLanguage.ko => 'Vui lòng nhập email',
+  };
+  String get accountRequired => switch (lang) {
+    AppLanguage.vi => 'Vui lòng nhập tài khoản',
+    AppLanguage.en => 'Please enter Account',
+    AppLanguage.zh => 'Vui lòng nhập tài khoản',
+    AppLanguage.ja => 'Vui lòng nhập tài khoản',
+    AppLanguage.ko => 'Vui lòng nhập tài khoản',
+  };
+
 
   String get gradeRequired => switch (lang) {
     AppLanguage.vi => 'Vui lòng chọn khối lớp',
