@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../app_language.dart';
 
@@ -10,33 +11,38 @@ class SelectLanguage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final lang = ref.watch(appLanguageProvider);
     final strings = AppStrings(lang);
+    final theme = Theme.of(context);
 
     return InkWell(
-      borderRadius: BorderRadius.circular(20),
-      onTap: () => _showLanguageSheet(context, ref, lang),
+      borderRadius: BorderRadius.circular(20.r),
+      onTap: () => _openLanguageBottomSheet(context),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(20),
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.06),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
+              blurRadius: 6.r,
+              offset: Offset(0, 2.h),
             ),
           ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(strings.flagEmoji),
-            const SizedBox(width: 6),
+            Text(
+              strings.flagEmoji,
+              style: TextStyle(fontSize: 16.sp),
+            ),
+            SizedBox(width: 6.w),
             Text(
               strings.shortCode,
-              style: TextStyle(
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurface,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ],
@@ -45,67 +51,90 @@ class SelectLanguage extends ConsumerWidget {
     );
   }
 
-  void _showLanguageSheet(
-      BuildContext context, WidgetRef ref, AppLanguage current) {
-    showModalBottomSheet(
+  Future<void> _openLanguageBottomSheet(BuildContext context) async {
+    await showModalBottomSheet<void>(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
       ),
-      builder: (ctx) {
-        final langs = AppLanguage.values;
+      builder: (_) => const _LanguageBottomSheet(),
+    );
+  }
+}
 
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 8),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Chọn ngôn ngữ',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
-              ListView.separated(
-                shrinkWrap: true,
-                itemCount: langs.length,
-                separatorBuilder: (_, __) =>
-                    Divider(height: 1, color: Colors.grey.shade300),
-                itemBuilder: (_, index) {
-                  final l = langs[index];
-                  final s = AppStrings(l);
-                  final selected = l == current;
+/// BottomSheet chọn ngôn ngữ
+class _LanguageBottomSheet extends ConsumerWidget {
+  const _LanguageBottomSheet();
 
-                  return ListTile(
-                    leading: Text(
-                      s.flagEmoji,
-                      style: const TextStyle(fontSize: 22),
-                    ),
-                    title: Text(s.languageName),
-                    trailing: selected
-                        ? Icon(Icons.check,
-                        color: Theme.of(context).colorScheme.primary)
-                        : null,
-                    onTap: () {
-                      ref.read(appLanguageProvider.notifier).state = l;
-                      Navigator.of(ctx).pop();
-                    },
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-            ],
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final currentLang = ref.watch(appLanguageProvider);
+    final strings = AppStrings(currentLang);
+    final langs = AppLanguage.values;
+
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 8.h),
+          // drag handle
+          Container(
+            width: 40.w,
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: theme.dividerColor,
+              borderRadius: BorderRadius.circular(2.r),
+            ),
           ),
-        );
-      },
+          SizedBox(height: 12.h),
+          Text(
+            strings.selectLanguageTitle, // "Chọn ngôn ngữ"
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: langs.length,
+            separatorBuilder: (_, __) => Divider(
+              height: 1.h,
+              color: Colors.grey.shade300,
+            ),
+            itemBuilder: (context, index) {
+              final lang = langs[index];
+              final s = AppStrings(lang);
+              final selected = lang == currentLang;
+
+              return ListTile(
+                leading: Text(
+                  s.flagEmoji,
+                  style: TextStyle(fontSize: 22.sp),
+                ),
+                title: Text(
+                  s.languageName,
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                trailing: selected
+                    ? Icon(
+                  Icons.check,
+                  color: theme.colorScheme.primary,
+                  size: 20.sp,
+                )
+                    : null,
+                onTap: () {
+                  ref.read(appLanguageProvider.notifier).state = lang;
+                  Navigator.of(context).pop();
+                },
+              );
+            },
+          ),
+          SizedBox(height: 8.h),
+        ],
+      ),
     );
   }
 }

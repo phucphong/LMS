@@ -5,8 +5,8 @@ class ApiClient {
       : _dio = Dio(
     BaseOptions(
       baseUrl: 'https://aff.ezmax.vn', // TODO: đổi sang domain thật
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
       headers: const {
         'Content-Type': 'application/json',
       },

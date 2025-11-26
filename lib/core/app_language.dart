@@ -22,6 +22,13 @@ class AppStrings {
     AppLanguage.ja => 'LMS ログイン',
     AppLanguage.ko => 'LMS 로그인',
   };
+  String get selectLanguageTitle => switch (lang) {
+    AppLanguage.vi => 'Chọn ngôn ngữ',
+    AppLanguage.en => 'Chọn ngôn ngữ',
+    AppLanguage.zh => 'Chọn ngôn ngữ',
+    AppLanguage.ja => 'Chọn ngôn ngữ',
+    AppLanguage.ko => 'Chọn ngôn ngữ',
+  };
 
   String get usernameLabel => switch (lang) {
     AppLanguage.vi => 'Tài khoản',

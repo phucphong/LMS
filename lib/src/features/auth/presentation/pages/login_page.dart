@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/app_language.dart';
 import '../../../../../core/widgets/custom_toast.dart';
 import '../../../../../core/widgets/select_language.dart';
+
+import '../../../home/presentation/pages/hom_page.dart';
 import '../providers/login_notifier.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -35,15 +37,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final appLang = ref.watch(appLanguageProvider);
     final strings = AppStrings(appLang);
 
-    // lắng nghe login để show toast
+    // Lắng nghe login để show toast + điều hướng Home
     ref.listen(loginNotifierProvider, (previous, next) {
+      // Thành công
       if (next.success && !next.isLoading) {
         showSuccessToast(
           context,
           strings.loginSuccess,
           position: ToastPosition.top,
         );
+
+        // Điều hướng sang HomePage, thay thế luôn LoginPage
+        Future.microtask(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const HomePage(),
+            ),
+          );
+        });
       }
+
+      // Lỗi
       if (next.error != null && next.error!.isNotEmpty) {
         showErrorToast(
           context,
@@ -63,32 +78,34 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 vertical: 12.h,
               ),
               child: ConstrainedBox(
-                constraints:
-                BoxConstraints(minHeight: constraints.maxHeight - 24.h),
+                // minHeight = chiều cao viewport để bottom copyright dính đáy
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // ===== TOP: chọn ngôn ngữ + logo + form =====
+                    // ===== TOP: language + logo + form =====
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // chọn ngôn ngữ
+                        40.h.verticalSpace,
+                        // Chọn ngôn ngữ
                         const Align(
                           alignment: Alignment.topRight,
                           child: SelectLanguage(),
                         ),
 
-                        SizedBox(height: 32.h),
+                        32.h.verticalSpace,
 
-                        // logo
+                        // Logo
                         Image.asset(
                           'assets/images/ic_logo.webp',
                           height: 96.h,
                           fit: BoxFit.contain,
                         ),
 
-                        SizedBox(height: 24.h),
+                        24.h.verticalSpace,
 
+                        // Tiêu đề
                         Text(
                           strings.loginTitle,
                           style: Theme.of(context)
@@ -98,13 +115,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           textAlign: TextAlign.center,
                         ),
 
-                        SizedBox(height: 20.h),
+                        20.h.verticalSpace,
 
+                        // ===== FORM =====
                         Form(
                           key: _formKey,
                           child: Column(
                             children: [
-                              // Tài khoản
+                              // --- Tài khoản ---
                               TextFormField(
                                 controller: _userController,
                                 style: TextStyle(fontSize: 14.sp),
@@ -124,9 +142,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     : null,
                               ),
 
-                              SizedBox(height: 16.h),
+                              24.h.verticalSpace,
 
-                              // Mật khẩu
+                              // --- Mật khẩu ---
                               TextFormField(
                                 controller: _passController,
                                 obscureText: _obscurePassword,
@@ -160,9 +178,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     : null,
                               ),
 
-                              SizedBox(height: 8.h),
+                              8.h.verticalSpace,
 
-                              // Lưu mật khẩu + Quên mật khẩu
+                              // --- Lưu mật khẩu + Quên mật khẩu ---
                               Row(
                                 children: [
                                   SizedBox(
@@ -176,9 +194,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         });
                                       },
                                       visualDensity: VisualDensity.compact,
+                                      materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                     ),
                                   ),
-                                  SizedBox(width: 4.w),
+                                  4.w.horizontalSpace,
                                   Text(
                                     strings.rememberMe,
                                     style: TextStyle(fontSize: 13.sp),
@@ -196,9 +216,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 ],
                               ),
 
-                              SizedBox(height: 12.h),
+                              12.h.verticalSpace,
 
-                              // Nút đăng nhập
+                              // --- Nút Đăng nhập ---
                               SizedBox(
                                 width: double.infinity,
                                 height: 44.h,
@@ -227,21 +247,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       ? SizedBox(
                                     width: 18.w,
                                     height: 18.w,
-                                    child: const CircularProgressIndicator(
+                                    child:
+                                    const CircularProgressIndicator(
                                       strokeWidth: 2,
                                     ),
                                   )
                                       : Text(
                                     strings.loginButton,
-                                    style:
-                                    TextStyle(fontSize: 15.sp),
+                                    style: TextStyle(fontSize: 15.sp),
                                   ),
                                 ),
                               ),
 
-                              SizedBox(height: 12.h),
+                              12.h.verticalSpace,
 
-                              // Đăng ký tài khoản
+                              // --- Bạn chưa có tài khoản? Đăng ký ngay ---
                               Align(
                                 alignment: Alignment.center,
                                 child: Row(
@@ -270,7 +290,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   ],
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -281,7 +300,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(height: 16.h),
+                        16.h.verticalSpace,
                         Text(
                           strings.copyright('PHONGNP'),
                           textAlign: TextAlign.center,
@@ -290,7 +309,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             fontSize: 14.sp,
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        4.h.verticalSpace,
                         Text(
                           strings.versionLabel('1'),
                           textAlign: TextAlign.center,
