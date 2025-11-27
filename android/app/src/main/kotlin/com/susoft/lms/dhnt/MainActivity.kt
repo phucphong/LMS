@@ -1,4 +1,4 @@
-package com.phongnp.lms.lms
+package com.susoft.lms.dhnt
 
 import io.flutter.embedding.android.FlutterActivity
 
